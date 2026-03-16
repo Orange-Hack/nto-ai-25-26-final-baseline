@@ -1,0 +1,29 @@
+imports:
+  - system.yaml
+
+pipeline:
+  k: 20
+  seed: 42
+  recent_days: 30
+
+candidates:
+  per_generator_k: 200
+  generators:
+    - name: global_popularity
+      params: {}
+    - name: user_genre
+      params:
+        genre_smoothing: 1.0
+    - name: user_author
+      params:
+        author_smoothing: 1.0
+
+ranking:
+  source_weights:
+    global_popularity: 1.0
+    user_genre: 1.0
+    user_author: 1.0
+
+validation:
+  pseudo_incident_days: 14
+

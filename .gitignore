@@ -1,0 +1,28 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.ruff_cache/
+.pytest_cache/
+
+# Virtual environments
+.venv
+data/
+docs/baseline_description.md
+catboost_info/
+outputs/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Project specific
+artifacts/
+logs/
+configs/local*.yaml
+outputs/
+catboost_info/

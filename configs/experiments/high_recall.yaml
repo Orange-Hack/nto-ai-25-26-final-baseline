@@ -1,0 +1,11 @@
+imports:
+  - ../base.yaml
+
+candidates:
+  per_generator_k: 300
+
+ranking:
+  source_weights:
+    global_popularity: 0.8
+    user_genre: 1.2
+    user_author: 1.3

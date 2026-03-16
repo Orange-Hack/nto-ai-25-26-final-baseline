@@ -1,0 +1,7 @@
+paths:
+  data_dir: ./data
+  artifacts_dir: ./artifacts
+
+logs:
+  dir: ./logs
+  tqdm_enabled: true
