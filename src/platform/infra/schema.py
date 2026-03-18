@@ -24,4 +24,3 @@ def ensure_columns(df: pd.DataFrame, columns: Iterable[str], table_name: str) ->
         raise ValueError(
             f"{table_name} is missing required columns: {', '.join(sorted(missing))}"
         )
-

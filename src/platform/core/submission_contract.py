@@ -55,4 +55,3 @@ def validate_submission_frame(
 
     if errors:
         raise ValueError("; ".join(errors))
-

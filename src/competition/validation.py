@@ -23,5 +23,6 @@ def validate_submission(submission: pd.DataFrame, data_dir: Path, k: int) -> Non
     target_users = set(
         pd.read_csv(data_dir / "targets.csv")["user_id"].astype("int64").tolist()
     )
-    validate_submission_frame(submission_df=submission, target_users=target_users, k=int(k))
-
+    validate_submission_frame(
+        submission_df=submission, target_users=target_users, k=int(k)
+    )

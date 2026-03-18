@@ -29,4 +29,3 @@ def read_parquet(path: Path) -> pd.DataFrame:
         Parsed pandas DataFrame.
     """
     return pd.read_parquet(path)
-

@@ -58,4 +58,3 @@ class PipelineContext:
     paths: PipelinePaths
     logger: logging.Logger
     artifacts: ArtifactsManager
-

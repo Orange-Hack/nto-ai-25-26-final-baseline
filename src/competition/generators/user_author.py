@@ -20,7 +20,9 @@ class UserAuthorGenerator:
 
     name = "user_author"
 
-    def __init__(self, author_smoothing: float = 1.0, show_progress: bool = False) -> None:
+    def __init__(
+        self, author_smoothing: float = 1.0, show_progress: bool = False
+    ) -> None:
         """Store hyperparameters used by author-based scoring.
 
         Args:
@@ -66,7 +68,9 @@ class UserAuthorGenerator:
         }
 
         author_to_edition = dataset.catalog_df[["edition_id", "author_id"]].copy()
-        author_to_edition["pop"] = author_to_edition["edition_id"].map(pop_map).fillna(0.0)
+        author_to_edition["pop"] = (
+            author_to_edition["edition_id"].map(pop_map).fillna(0.0)
+        )
         author_to_edition = author_to_edition.sort_values(
             ["author_id", "pop", "edition_id"], ascending=[True, False, True]
         )
@@ -76,7 +80,9 @@ class UserAuthorGenerator:
             rows = group.head(top_per_author)
             author_to_editions[int(author_id)] = [
                 (int(edition_id), float(pop))
-                for edition_id, pop in zip(rows["edition_id"].tolist(), rows["pop"].tolist())
+                for edition_id, pop in zip(
+                    rows["edition_id"].tolist(), rows["pop"].tolist()
+                )
             ]
 
         user_profile = user_profile[user_profile["user_id"].isin(user_ids.tolist())]
@@ -96,10 +102,12 @@ class UserAuthorGenerator:
                 author_id = int(profile_row["author_id"])
                 weight = float(profile_row["value"])
                 for edition_id, pop in author_to_editions.get(author_id, []):
-                    score_by_edition[edition_id] = score_by_edition.get(edition_id, 0.0) + (
-                        weight * (pop + self.author_smoothing)
-                    )
-            top_items = sorted(score_by_edition.items(), key=lambda x: (-x[1], x[0]))[:k]
+                    score_by_edition[edition_id] = score_by_edition.get(
+                        edition_id, 0.0
+                    ) + (weight * (pop + self.author_smoothing))
+            top_items = sorted(score_by_edition.items(), key=lambda x: (-x[1], x[0]))[
+                :k
+            ]
             for edition_id, score in top_items:
                 rows.append(
                     {
@@ -110,4 +118,3 @@ class UserAuthorGenerator:
                     }
                 )
         return pd.DataFrame(rows, columns=["user_id", "edition_id", "score", "source"])
-

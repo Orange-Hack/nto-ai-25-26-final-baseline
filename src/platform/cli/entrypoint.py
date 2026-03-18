@@ -16,7 +16,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m src.platform.cli.entrypoint")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    run_parser = subparsers.add_parser("run", help="Run whole pipeline or selected stage")
+    run_parser = subparsers.add_parser(
+        "run", help="Run whole pipeline or selected stage"
+    )
     run_parser.add_argument(
         "--config",
         type=Path,
@@ -67,4 +69,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

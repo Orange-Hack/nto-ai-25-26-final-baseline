@@ -31,4 +31,3 @@ def test_validate_submission_rejects_missing_user() -> None:
     submission = submission[submission["user_id"] == 1]
     with pytest.raises(ValueError):
         validate_submission_frame(submission_df=submission, target_users={1, 2}, k=20)
-

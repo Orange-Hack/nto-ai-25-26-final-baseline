@@ -12,4 +12,3 @@ def utc_now_iso() -> str:
         ISO-8601 timestamp with explicit UTC timezone offset.
     """
     return datetime.now(tz=timezone.utc).isoformat()
-

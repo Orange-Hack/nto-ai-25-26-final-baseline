@@ -23,7 +23,9 @@ def build_features_frame(dataset: Dataset, recent_days: int) -> pd.DataFrame:
         Long-form feature DataFrame with columns:
         `feature_type`, `user_id`, `edition_id`, `genre_id`, `author_id`, `value`.
     """
-    positives = dataset.interactions_df[dataset.interactions_df["event_type"].isin([1, 2])]
+    positives = dataset.interactions_df[
+        dataset.interactions_df["event_type"].isin([1, 2])
+    ]
 
     popularity_all = (
         positives.groupby("edition_id", as_index=False)["user_id"]
@@ -59,9 +61,9 @@ def build_features_frame(dataset: Dataset, recent_days: int) -> pd.DataFrame:
         .count()
         .rename(columns={"edition_id": "value"})
     )
-    user_genre_profile["value"] = user_genre_profile["value"] / user_genre_profile.groupby(
-        "user_id"
-    )["value"].transform("sum")
+    user_genre_profile["value"] = user_genre_profile[
+        "value"
+    ] / user_genre_profile.groupby("user_id")["value"].transform("sum")
     user_genre_profile["feature_type"] = "user_genre_profile"
     user_genre_profile["edition_id"] = pd.NA
     user_genre_profile["author_id"] = pd.NA
@@ -76,9 +78,9 @@ def build_features_frame(dataset: Dataset, recent_days: int) -> pd.DataFrame:
         .count()
         .rename(columns={"edition_id": "value"})
     )
-    user_author_profile["value"] = user_author_profile["value"] / user_author_profile.groupby(
-        "user_id"
-    )["value"].transform("sum")
+    user_author_profile["value"] = user_author_profile[
+        "value"
+    ] / user_author_profile.groupby("user_id")["value"].transform("sum")
     user_author_profile["feature_type"] = "user_author_profile"
     user_author_profile["edition_id"] = pd.NA
     user_author_profile["genre_id"] = pd.NA
@@ -86,18 +88,45 @@ def build_features_frame(dataset: Dataset, recent_days: int) -> pd.DataFrame:
     return pd.concat(
         [
             popularity_all[
-                ["feature_type", "user_id", "edition_id", "genre_id", "author_id", "value"]
+                [
+                    "feature_type",
+                    "user_id",
+                    "edition_id",
+                    "genre_id",
+                    "author_id",
+                    "value",
+                ]
             ],
             popularity_recent[
-                ["feature_type", "user_id", "edition_id", "genre_id", "author_id", "value"]
+                [
+                    "feature_type",
+                    "user_id",
+                    "edition_id",
+                    "genre_id",
+                    "author_id",
+                    "value",
+                ]
             ],
             user_genre_profile[
-                ["feature_type", "user_id", "edition_id", "genre_id", "author_id", "value"]
+                [
+                    "feature_type",
+                    "user_id",
+                    "edition_id",
+                    "genre_id",
+                    "author_id",
+                    "value",
+                ]
             ],
             user_author_profile[
-                ["feature_type", "user_id", "edition_id", "genre_id", "author_id", "value"]
+                [
+                    "feature_type",
+                    "user_id",
+                    "edition_id",
+                    "genre_id",
+                    "author_id",
+                    "value",
+                ]
             ],
         ],
         ignore_index=True,
     )
-

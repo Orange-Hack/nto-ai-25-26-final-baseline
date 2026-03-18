@@ -29,7 +29,7 @@ class GenerateCandidatesStage:
             Dictionary with row/user/source counts for metadata reporting.
         """
         dataset = load_runtime_dataset(self.context.paths)
-        features = pd.read_parquet(self.context.paths.features_path)
+        features = pd.read_csv(self.context.paths.features_path)
         user_ids = dataset.targets_df["user_id"].drop_duplicates().astype("int64")
         logs_cfg = self.context.config.get("logs", {})
         tqdm_enabled = bool(logs_cfg.get("tqdm_enabled", True)) and sys.stdout.isatty()
@@ -55,12 +55,17 @@ class GenerateCandidatesStage:
             "cache_misses": cache_misses,
             "entries": cache_entries,
         }
-        atomic_write_json(self.context.paths.generators_cache_manifest_path, manifest_payload)
+        atomic_write_json(
+            self.context.paths.generators_cache_manifest_path, manifest_payload
+        )
         return {
             "rows": int(len(candidates)),
-            "users": int(candidates["user_id"].nunique() if not candidates.empty else 0),
-            "sources": int(candidates["source"].nunique() if not candidates.empty else 0),
+            "users": int(
+                candidates["user_id"].nunique() if not candidates.empty else 0
+            ),
+            "sources": int(
+                candidates["source"].nunique() if not candidates.empty else 0
+            ),
             "cache_hits": int(cache_hits),
             "cache_misses": int(cache_misses),
         }
-

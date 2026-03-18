@@ -9,4 +9,3 @@ __all__ = [
     "rank_predictions",
     "validate_submission",
 ]
-

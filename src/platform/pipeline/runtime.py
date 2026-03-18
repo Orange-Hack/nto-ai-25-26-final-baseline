@@ -23,7 +23,7 @@ def load_runtime_dataset(paths: PipelinePaths) -> Dataset:
         Dataset with cached interactions/seen positives and fresh static tables.
     """
     base_dataset = Dataset.load(paths.data_dir)
-    cache = pd.read_parquet(paths.data_cache_path)
+    cache = pd.read_csv(paths.data_cache_path)
     interactions = cache[cache["_record_type"] == "interaction"][
         ["user_id", "edition_id", "event_type", "rating", "event_ts"]
     ].copy()
@@ -63,4 +63,3 @@ def pack_data_cache(dataset: Dataset) -> pd.DataFrame:
     return combined[
         ["_record_type", "user_id", "edition_id", "event_type", "rating", "event_ts"]
     ]
-

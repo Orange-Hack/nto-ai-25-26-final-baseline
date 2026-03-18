@@ -58,7 +58,9 @@ class SimpleBlendRanker:
         blended = (
             filtered.groupby(["user_id", "edition_id"], as_index=False)["final_score"]
             .max()
-            .sort_values(["user_id", "final_score", "edition_id"], ascending=[True, False, True])
+            .sort_values(
+                ["user_id", "final_score", "edition_id"], ascending=[True, False, True]
+            )
         )
 
         selected = blended.groupby("user_id", group_keys=False).head(k).copy()
@@ -70,7 +72,9 @@ class SimpleBlendRanker:
 
     def _fallback_only(self, dataset: Dataset, k: int) -> pd.DataFrame:
         rows: list[dict[str, int | float]] = []
-        positives = dataset.interactions_df[dataset.interactions_df["event_type"].isin([1, 2])]
+        positives = dataset.interactions_df[
+            dataset.interactions_df["event_type"].isin([1, 2])
+        ]
         popularity = (
             positives.groupby("edition_id", as_index=False)["user_id"]
             .nunique()
@@ -80,7 +84,9 @@ class SimpleBlendRanker:
         ranked_editions = popularity["edition_id"].tolist()
         seen_pairs = set(
             tuple(x)
-            for x in dataset.seen_positive_df[["user_id", "edition_id"]].drop_duplicates().to_numpy()
+            for x in dataset.seen_positive_df[["user_id", "edition_id"]]
+            .drop_duplicates()
+            .to_numpy()
         )
         for user_id in dataset.targets_df["user_id"].tolist():
             rank = 1
@@ -106,7 +112,9 @@ class SimpleBlendRanker:
         dataset: Dataset,
         k: int,
     ) -> pd.DataFrame:
-        positives = dataset.interactions_df[dataset.interactions_df["event_type"].isin([1, 2])]
+        positives = dataset.interactions_df[
+            dataset.interactions_df["event_type"].isin([1, 2])
+        ]
         popularity = (
             positives.groupby("edition_id", as_index=False)["user_id"]
             .nunique()
@@ -116,9 +124,13 @@ class SimpleBlendRanker:
         popular_editions = popularity["edition_id"].tolist()
         seen_pairs = set(
             tuple(x)
-            for x in dataset.seen_positive_df[["user_id", "edition_id"]].drop_duplicates().to_numpy()
+            for x in dataset.seen_positive_df[["user_id", "edition_id"]]
+            .drop_duplicates()
+            .to_numpy()
         )
-        chosen_pairs = set(tuple(x) for x in selected[["user_id", "edition_id"]].to_numpy())
+        chosen_pairs = set(
+            tuple(x) for x in selected[["user_id", "edition_id"]].to_numpy()
+        )
         missing_rows: list[dict[str, int | float]] = []
         by_user_counts = selected.groupby("user_id").size().to_dict()
 
@@ -144,7 +156,9 @@ class SimpleBlendRanker:
                 if rank > k:
                     break
         if missing_rows:
-            selected = pd.concat([selected, pd.DataFrame(missing_rows)], ignore_index=True)
+            selected = pd.concat(
+                [selected, pd.DataFrame(missing_rows)], ignore_index=True
+            )
         return selected
 
 
@@ -169,4 +183,3 @@ def rank_predictions(
         source_weights={key: float(value) for key, value in source_weights.items()}
     )
     return ranker.rank(dataset=dataset, candidates=candidates, k=int(k))
-

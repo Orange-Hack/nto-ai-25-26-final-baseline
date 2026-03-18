@@ -12,4 +12,3 @@ __all__ = [
     "run_generators",
     "validate_candidate_contract",
 ]
-

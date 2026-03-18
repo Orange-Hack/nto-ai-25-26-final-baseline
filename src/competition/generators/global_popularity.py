@@ -51,9 +51,9 @@ class GlobalPopularityGenerator:
             Candidate DataFrame with `user_id`, `edition_id`, `score`, `source`.
         """
         del dataset, seed
-        popularity = features[
-            features["feature_type"] == "edition_popularity_all"
-        ][["edition_id", "value"]].copy()
+        popularity = features[features["feature_type"] == "edition_popularity_all"][
+            ["edition_id", "value"]
+        ].copy()
         popularity = popularity.sort_values(
             ["value", "edition_id"], ascending=[False, True]
         ).head(k)
@@ -81,4 +81,3 @@ class GlobalPopularityGenerator:
                     }
                 )
         return pd.DataFrame(rows)
-

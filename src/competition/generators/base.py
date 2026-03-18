@@ -52,4 +52,3 @@ class GeneratorConfig:
 
     name: str
     params: dict[str, float]
-

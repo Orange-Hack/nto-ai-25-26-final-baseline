@@ -32,7 +32,9 @@ def ndcg_at_k(predicted: list[int], relevant: set[int], k: int) -> float:
     for rank, edition_id in enumerate(predicted[:k], start=1):
         rel = 1.0 if edition_id in relevant else 0.0
         dcg += rel / math.log2(rank + 1)
-    idcg = sum(1.0 / math.log2(rank + 1) for rank in range(1, min(len(relevant), k) + 1))
+    idcg = sum(
+        1.0 / math.log2(rank + 1) for rank in range(1, min(len(relevant), k) + 1)
+    )
     return dcg / idcg if idcg > 0 else 0.0
 
 
@@ -67,4 +69,3 @@ def summarize_ndcg(
         quantiles=quantiles,
         per_user=per_user_df,
     )
-

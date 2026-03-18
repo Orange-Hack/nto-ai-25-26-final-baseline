@@ -8,7 +8,9 @@ from pathlib import Path
 from typing import Any
 
 
-def compute_inputs_fingerprint(inputs: list[Path], config_snapshot: dict[str, Any]) -> str:
+def compute_inputs_fingerprint(
+    inputs: list[Path], config_snapshot: dict[str, Any]
+) -> str:
     """Build stable hash from input file metadata and config snapshot.
 
     Args:
@@ -34,4 +36,3 @@ def compute_inputs_fingerprint(inputs: list[Path], config_snapshot: dict[str, An
 
     serialized = json.dumps(payload, sort_keys=True, ensure_ascii=True).encode("utf-8")
     return hashlib.sha256(serialized).hexdigest()
-

@@ -12,4 +12,3 @@ class PipelineStage(Protocol):
 
     def run(self) -> dict[str, Any]:
         """Execute stage side effects and return stage statistics."""
-

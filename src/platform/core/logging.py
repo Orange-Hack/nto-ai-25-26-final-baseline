@@ -55,4 +55,3 @@ def configure_logging(logs_dir: Path) -> tuple[logging.Logger, Path]:
     logger.addHandler(file_handler)
     logger.info("Logging initialized")
     return logger, log_path
-

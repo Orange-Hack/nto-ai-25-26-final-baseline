@@ -21,7 +21,9 @@ class UserGenrePopularityGenerator:
 
     name = "user_genre"
 
-    def __init__(self, genre_smoothing: float = 1.0, show_progress: bool = False) -> None:
+    def __init__(
+        self, genre_smoothing: float = 1.0, show_progress: bool = False
+    ) -> None:
         """Store hyperparameters controlling user-genre scoring.
 
         Args:
@@ -82,7 +84,9 @@ class UserGenrePopularityGenerator:
             rows = group.head(top_per_genre)
             genre_to_editions[int(genre_id)] = [
                 (int(edition_id), float(pop))
-                for edition_id, pop in zip(rows["edition_id"].tolist(), rows["pop"].tolist())
+                for edition_id, pop in zip(
+                    rows["edition_id"].tolist(), rows["pop"].tolist()
+                )
             ]
 
         user_profile = user_profile[user_profile["user_id"].isin(user_ids.tolist())]
@@ -102,10 +106,12 @@ class UserGenrePopularityGenerator:
                 genre_id = int(profile_row["genre_id"])
                 weight = float(profile_row["value"])
                 for edition_id, pop in genre_to_editions.get(genre_id, []):
-                    score_by_edition[edition_id] = score_by_edition.get(edition_id, 0.0) + (
-                        weight * (pop + self.genre_smoothing)
-                    )
-            top_items = sorted(score_by_edition.items(), key=lambda x: (-x[1], x[0]))[:k]
+                    score_by_edition[edition_id] = score_by_edition.get(
+                        edition_id, 0.0
+                    ) + (weight * (pop + self.genre_smoothing))
+            top_items = sorted(score_by_edition.items(), key=lambda x: (-x[1], x[0]))[
+                :k
+            ]
             for edition_id, score in top_items:
                 rows.append(
                     {
@@ -116,4 +122,3 @@ class UserGenrePopularityGenerator:
                     }
                 )
         return pd.DataFrame(rows, columns=["user_id", "edition_id", "score", "source"])
-

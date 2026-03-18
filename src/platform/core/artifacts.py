@@ -186,4 +186,3 @@ def atomic_write_dataframe(df: pd.DataFrame, path: Path) -> None:
     finally:
         if tmp_path.exists():
             tmp_path.unlink(missing_ok=True)
-

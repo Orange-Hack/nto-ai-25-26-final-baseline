@@ -23,16 +23,19 @@ class RankAndSelectStage:
     def run(self) -> dict[str, Any]:
         """Load candidates, rank them, and persist prediction artifact."""
         dataset = load_runtime_dataset(self.context.paths)
-        candidates = pd.read_parquet(self.context.paths.candidates_path)
+        candidates = pd.read_csv(self.context.paths.candidates_path)
         predictions = rank_predictions(
             dataset=dataset,
             candidates=candidates,
-            source_weights=self.context.config.get("ranking", {}).get("source_weights", {}),
+            source_weights=self.context.config.get("ranking", {}).get(
+                "source_weights", {}
+            ),
             k=int(self.context.config["pipeline"]["k"]),
         )
         atomic_write_dataframe(predictions, self.context.paths.predictions_path)
         return {
             "rows": int(len(predictions)),
-            "users": int(predictions["user_id"].nunique() if not predictions.empty else 0),
+            "users": int(
+                predictions["user_id"].nunique() if not predictions.empty else 0
+            ),
         }
-

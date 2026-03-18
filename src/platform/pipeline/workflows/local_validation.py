@@ -59,10 +59,14 @@ class PseudoIncidentValidationWorkflow:
         masked_pairs = pseudo_pairs.iloc[mask_indexes].copy()
         masked_pairs["_masked"] = 1
 
-        observed = clean_df.merge(masked_pairs, on=["user_id", "edition_id"], how="left")
+        observed = clean_df.merge(
+            masked_pairs, on=["user_id", "edition_id"], how="left"
+        )
         observed = observed[observed["_masked"].isna()].drop(columns=["_masked"])
 
-        targets = pseudo_window_df[["user_id"]].drop_duplicates().astype({"user_id": "int64"})
+        targets = (
+            pseudo_window_df[["user_id"]].drop_duplicates().astype({"user_id": "int64"})
+        )
         validation_dataset = Dataset(
             interactions_df=observed,
             targets_df=targets,
@@ -78,7 +82,9 @@ class PseudoIncidentValidationWorkflow:
             dataset=validation_dataset,
             recent_days=int(self.context.config["pipeline"]["recent_days"]),
         )
-        user_ids = validation_dataset.targets_df["user_id"].drop_duplicates().astype("int64")
+        user_ids = (
+            validation_dataset.targets_df["user_id"].drop_duplicates().astype("int64")
+        )
         logs_cfg = self.context.config.get("logs", {})
         tqdm_enabled = bool(logs_cfg.get("tqdm_enabled", True)) and sys.stdout.isatty()
         candidates = run_generators(
@@ -93,13 +99,17 @@ class PseudoIncidentValidationWorkflow:
         predictions = rank_predictions(
             dataset=validation_dataset,
             candidates=candidates,
-            source_weights=self.context.config.get("ranking", {}).get("source_weights", {}),
+            source_weights=self.context.config.get("ranking", {}).get(
+                "source_weights", {}
+            ),
             k=k,
         )
 
         relevant_by_user: dict[int, set[int]] = {}
         for row in masked_pairs.to_dict(orient="records"):
-            relevant_by_user.setdefault(int(row["user_id"]), set()).add(int(row["edition_id"]))
+            relevant_by_user.setdefault(int(row["user_id"]), set()).add(
+                int(row["edition_id"])
+            )
 
         per_user_rows: list[dict[str, float | int]] = []
         target_user_ids = targets["user_id"].tolist()
@@ -112,7 +122,9 @@ class PseudoIncidentValidationWorkflow:
             disable=not tqdm_enabled,
             file=sys.stdout,
         ):
-            user_pred = predictions[predictions["user_id"] == int(user_id)].sort_values("rank")
+            user_pred = predictions[predictions["user_id"] == int(user_id)].sort_values(
+                "rank"
+            )
             predicted = user_pred["edition_id"].astype("int64").tolist()
             relevant = relevant_by_user.get(int(user_id), set())
             ndcg = ndcg_at_k(
@@ -131,4 +143,3 @@ class PseudoIncidentValidationWorkflow:
         }
         self.context.logger.info("Local validation result: %s", result)
         return result
-

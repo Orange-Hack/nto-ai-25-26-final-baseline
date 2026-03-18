@@ -25,7 +25,7 @@ class MakeSubmissionStage:
         Returns:
             Dictionary with row and user counts for run metadata.
         """
-        predictions = pd.read_parquet(self.context.paths.predictions_path).copy()
+        predictions = pd.read_csv(self.context.paths.predictions_path).copy()
         submission = predictions[["user_id", "edition_id", "rank"]].sort_values(
             ["user_id", "rank", "edition_id"]
         )
@@ -40,6 +40,7 @@ class MakeSubmissionStage:
         atomic_write_dataframe(submission, self.context.paths.submission_path)
         return {
             "rows": int(len(submission)),
-            "users": int(submission["user_id"].nunique() if not submission.empty else 0),
+            "users": int(
+                submission["user_id"].nunique() if not submission.empty else 0
+            ),
         }
-

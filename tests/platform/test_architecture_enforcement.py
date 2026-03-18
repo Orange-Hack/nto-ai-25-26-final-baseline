@@ -49,7 +49,9 @@ def check_imports(file_path: Path) -> list[str]:
             if node.module:
                 for legacy in LEGACY_NAMESPACES:
                     if node.module.startswith(legacy):
-                        violations.append(f"Forbidden legacy import from: {node.module}")
+                        violations.append(
+                            f"Forbidden legacy import from: {node.module}"
+                        )
 
                 # Boundary rule: competition -> platform/pipeline (forbidden)
                 if str(rel_path).startswith("src/competition"):
@@ -61,12 +63,16 @@ def check_imports(file_path: Path) -> list[str]:
     return violations
 
 
-@pytest.mark.parametrize("file_path", get_all_python_files(SRC_DIR) + get_all_python_files(TESTS_DIR))
+@pytest.mark.parametrize(
+    "file_path", get_all_python_files(SRC_DIR) + get_all_python_files(TESTS_DIR)
+)
 def test_architectural_boundaries(file_path: Path) -> None:
     """Verify that file follows Two-Zone import rules."""
     violations = check_imports(file_path)
     if violations:
-        pytest.fail(f"Architectural violations in {file_path}:\n" + "\n".join(violations))
+        pytest.fail(
+            f"Architectural violations in {file_path}:\n" + "\n".join(violations)
+        )
 
 
 def test_no_solution_logic_in_platform() -> None:

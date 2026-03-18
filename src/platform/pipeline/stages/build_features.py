@@ -30,4 +30,3 @@ class BuildFeaturesStage:
             "rows": int(len(features)),
             "users": int(dataset.targets_df["user_id"].nunique()),
         }
-

@@ -121,7 +121,9 @@ class Dataset:
         ]
         for column, frame in int_columns:
             if column in frame.columns:
-                frame[column] = pd.to_numeric(frame[column], errors="coerce").astype("Int64")
+                frame[column] = pd.to_numeric(frame[column], errors="coerce").astype(
+                    "Int64"
+                )
 
         interactions_df = interactions_df.astype(
             {"user_id": "int64", "edition_id": "int64", "event_type": "int32"}
@@ -139,7 +141,9 @@ class Dataset:
             }
         )
         authors_df = authors_df.astype({"author_id": "int64"})
-        book_genres_df = book_genres_df.astype({"book_id": "int64", "genre_id": "int64"})
+        book_genres_df = book_genres_df.astype(
+            {"book_id": "int64", "genre_id": "int64"}
+        )
         genres_df = genres_df.astype({"genre_id": "int64"})
 
         seen_positive_df = (
@@ -160,4 +164,3 @@ class Dataset:
             users_df=users_df,
             seen_positive_df=seen_positive_df,
         )
-

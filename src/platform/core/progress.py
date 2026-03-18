@@ -56,4 +56,3 @@ class StageProgressTracker:
     def register_completed_stage(self, duration_sec: float) -> None:
         """Record one finished stage duration for future ETA estimation."""
         self.completed_durations.append(max(0.0, float(duration_sec)))
-

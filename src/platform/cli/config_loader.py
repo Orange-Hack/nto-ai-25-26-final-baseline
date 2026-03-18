@@ -56,4 +56,3 @@ def load_config(config_path: Path, visited: set[Path] | None = None) -> dict[str
         child_cfg = load_config(child_path, visited=visited)
         merged = _deep_merge(merged, child_cfg)
     return _deep_merge(merged, config)
-

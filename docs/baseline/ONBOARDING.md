@@ -23,7 +23,7 @@
 На практике это означает такой поток:
 
 ```text
-raw CSV -> data_cache.parquet -> features.parquet -> candidates.parquet -> predictions.parquet -> submission.csv
+raw CSV -> data_cache.csv -> features.csv -> candidates.csv -> predictions.csv -> submission.csv
 ```
 
 `platform` управляет этим жизненным циклом, а `competition` подставляет solution-логику в ключевые точки: построение признаков, генерация кандидатов и ранжирование.

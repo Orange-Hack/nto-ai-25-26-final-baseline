@@ -41,7 +41,7 @@ uv run python -m src.platform.cli.entrypoint validate --config configs/experimen
 
 Итоговый сабмит: `artifacts/submission.csv`
 
-Промежуточные артефакты: `artifacts/*.parquet`
+Промежуточные артефакты: `artifacts/*.csv`
 
 Метаданные запуска:
   - `artifacts/_meta/run.json`

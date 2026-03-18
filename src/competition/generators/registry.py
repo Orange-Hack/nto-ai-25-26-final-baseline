@@ -37,7 +37,9 @@ GENERATOR_REGISTRY: dict[str, GeneratorFactory] = {
 }
 
 
-def build_generator(name: str, params: dict[str, float], tqdm_enabled: bool = False) -> object:
+def build_generator(
+    name: str, params: dict[str, float], tqdm_enabled: bool = False
+) -> object:
     """Instantiate a configured generator factory by name.
 
     Args:
@@ -55,6 +57,7 @@ def build_generator(name: str, params: dict[str, float], tqdm_enabled: bool = Fa
         factory = GENERATOR_REGISTRY[name]
     except KeyError as exc:
         available = ", ".join(sorted(GENERATOR_REGISTRY))
-        raise ValueError(f"Unknown generator name: {name}. Available: {available}") from exc
+        raise ValueError(
+            f"Unknown generator name: {name}. Available: {available}"
+        ) from exc
     return factory(params, tqdm_enabled)
-

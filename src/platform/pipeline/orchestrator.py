@@ -26,7 +26,9 @@ from src.platform.pipeline.stages import (
     RankAndSelectStage,
 )
 from src.platform.pipeline.stages.base import PipelineStage
-from src.platform.pipeline.workflows.local_validation import PseudoIncidentValidationWorkflow
+from src.platform.pipeline.workflows.local_validation import (
+    PseudoIncidentValidationWorkflow,
+)
 
 
 class PipelineRunner:
@@ -69,14 +71,14 @@ class PipelineRunner:
             data_dir=data_dir,
             artifacts_dir=artifacts_dir,
             logs_dir=logs_dir,
-            data_cache_path=artifacts_dir / "data_cache.parquet",
-            features_path=artifacts_dir / "features.parquet",
-            candidates_path=artifacts_dir / "candidates.parquet",
+            data_cache_path=artifacts_dir / "data_cache.csv",
+            features_path=artifacts_dir / "features.csv",
+            candidates_path=artifacts_dir / "candidates.csv",
             generators_cache_dir=artifacts_dir / "generators",
             generators_cache_manifest_path=artifacts_dir
             / "_meta"
             / "generator_cache_manifest.json",
-            predictions_path=artifacts_dir / "predictions.parquet",
+            predictions_path=artifacts_dir / "predictions.csv",
             submission_path=artifacts_dir / "submission.csv",
         )
 
@@ -114,7 +116,9 @@ class PipelineRunner:
         self.logger.info("Pipeline start: %s stages", total_stages)
         for stage_index, stage_name in enumerate(stages_to_run, start=1):
             remaining_after = stages_to_run[stage_index:]
-            eta_before = tracker.estimate_remaining_seconds(stage_index, remaining_after)
+            eta_before = tracker.estimate_remaining_seconds(
+                stage_index, remaining_after
+            )
             self.logger.info(
                 "Stage %s/%s %s started (remaining_stages=%s, eta~%s)",
                 stage_index,
@@ -130,7 +134,9 @@ class PipelineRunner:
             )
             if not was_skipped:
                 tracker.register_completed_stage(stage_duration)
-                eta_after = tracker.estimate_remaining_seconds(stage_index, remaining_after)
+                eta_after = tracker.estimate_remaining_seconds(
+                    stage_index, remaining_after
+                )
                 self.logger.info(
                     "Stage %s/%s %s done in %.2fs, remaining=%s, remaining~%s",
                     stage_index,
@@ -275,4 +281,3 @@ class PipelineRunner:
                     }
                 )
         return metadata
-

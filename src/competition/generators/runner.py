@@ -17,7 +17,9 @@ GENERATOR_CACHE_SCHEMA_VERSION = 1
 
 
 def _sanitize_source_name(source_name: str) -> str:
-    safe = "".join(char if char.isalnum() or char in {"-", "_"} else "_" for char in source_name)
+    safe = "".join(
+        char if char.isalnum() or char in {"-", "_"} else "_" for char in source_name
+    )
     return safe or "generator"
 
 
@@ -140,7 +142,11 @@ def run_generators_with_cache(
         fingerprint = ""
         cache_path: Path | None = None
         cache_hit = False
-        if cache_dir is not None and features_input_path is not None and targets_input_path is not None:
+        if (
+            cache_dir is not None
+            and features_input_path is not None
+            and targets_input_path is not None
+        ):
             fingerprint = compute_inputs_fingerprint(
                 inputs=[features_input_path, targets_input_path],
                 config_snapshot={
@@ -156,10 +162,10 @@ def run_generators_with_cache(
                     },
                 },
             )
-            cache_name = f"{_sanitize_source_name(generator.name)}__{fingerprint}.parquet"
+            cache_name = f"{_sanitize_source_name(generator.name)}__{fingerprint}.csv"
             cache_path = cache_dir / cache_name
             if cache_path.exists():
-                generated = pd.read_parquet(cache_path)
+                generated = pd.read_csv(cache_path)
                 generated = validate_candidate_contract(generated, generator.name)
                 cache_hit = True
             else:
@@ -171,7 +177,7 @@ def run_generators_with_cache(
                     seed=int(seed),
                 )
                 generated = validate_candidate_contract(generated, generator.name)
-                generated.to_parquet(cache_path, index=False)
+                generated.to_csv(cache_path, index=False)
         else:
             generated = generator.generate(
                 dataset=dataset,
@@ -201,4 +207,3 @@ def run_generators_with_cache(
         else pd.DataFrame(columns=["user_id", "edition_id", "score", "source"])
     )
     return aggregated, cache_entries
-

@@ -18,7 +18,7 @@ class PrepareDataStage:
         self.context = context
 
     def run(self) -> dict[str, Any]:
-        """Build `data_cache.parquet` from source interactions and positives."""
+        """Build `data_cache.csv` from source interactions and positives."""
         dataset = load_base_dataset(self.context.paths)
         data_cache = pack_data_cache(dataset)
         atomic_write_dataframe(data_cache, self.context.paths.data_cache_path)
@@ -27,4 +27,3 @@ class PrepareDataStage:
             "users": int(dataset.interactions_df["user_id"].nunique()),
             "positives": int(len(dataset.seen_positive_df)),
         }
-
